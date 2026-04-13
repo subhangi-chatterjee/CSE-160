@@ -25,6 +25,7 @@ const CIRCLE = 2;
 
 let g_selectedColor = [1.0, 1.0, 1.0, 1.0];
 let g_selectedSize = 5;
+let g_selectedSegments = 10;
 let g_shapesList = [];
 let g_selectedType = POINT;
 
@@ -70,6 +71,7 @@ function addActionsForHtmlUiI() {
 
   document.getElementById('pointButton').onclick = function() { g_selectedType = POINT};
   document.getElementById('triButton').onclick = function() { g_selectedType = TRIANGLE};
+  document.getElementById('circleButton').onclick = function() { g_selectedType = CIRCLE};
 
   document.getElementById('redSlide').addEventListener('mouseup', function() {
     g_selectedColor[0] = this.value / 100;
@@ -85,6 +87,10 @@ function addActionsForHtmlUiI() {
 
   document.getElementById('sizeSlide').addEventListener('mouseup', function() {
     g_selectedSize = this.value;
+  });
+
+  document.getElementById('segmentSlide').addEventListener('mouseup', function() {
+    g_selectedSegments = Number(this.value);
   });
 
   
@@ -113,13 +119,18 @@ function click(ev) {
   let point;
   if(g_selectedType == POINT){
     point = new Point();
-  } else {
+  } else if (g_selectedType == TRIANGLE) {
     point = new Triangle();
+  } else {
+    point = new Circle();
   }
 
   point.position = [x, y, 0.0];
   point.color = g_selectedColor.slice();
   point.size = g_selectedSize;
+  if (g_selectedType == CIRCLE) {
+    point.segments = g_selectedSegments;
+  }
   g_shapesList.push(point);
 
   renderAllshapes();

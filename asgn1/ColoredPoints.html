@@ -17,18 +17,17 @@
     <br></br>
     <button type = "button" id="pointButton">Point</button>
     <button type = "button" id="triButton">Triangle</button>
-    
     <button type = "button" id="circleButton">Circle</button>
 
-
     <p>
-    Red <input type="range" min="0" max="100" value="100" class="slider" id="redSlide"> </p>
+    Red <input type="range" min="0" max="100" value="100" class="slider" id="redSlide">
+    Green <input type="range" min="0" max="100" value="0" class="slider" id="greenSlide">
+    Blue <input type="range" min="0" max="100" value="0" class="slider" id="blueSlide"> 
+    </p>
     <p>
-    Green <input type="range" min="0" max="100" value="0" class="slider" id="greenSlide"> </p>
-    <p>
-    Blue <input type="range" min="0" max="100" value="0" class="slider" id="blueSlide"> </p>
-    <p>
-    Size <input type="range" min="5" max="40" value="0" class="slider" id="sizeSlide"> </p>
+    Shape Size <input type="range" min="5" max="40" value="5" class="slider" id="sizeSlide">
+    (Circles) Segment Count <input type="range" min="3" max="50" value="10" class="slider" id="segmentSlide"> 
+    </p>
 
     <script src="lib/webgl-utils.js"></script>
     <script src="lib/webgl-debug.js"></script>
