@@ -28,6 +28,7 @@ let g_selectedSize = 5;
 let g_selectedSegments = 10;
 let g_shapesList = [];
 let g_selectedType = POINT;
+let g_showPicture = false;
 
 function setupWebGl() {
   canvas = document.getElementById('webgl');
@@ -67,7 +68,15 @@ function connectVariablestoGLSL() {
 function addActionsForHtmlUiI() {
   // document.getElementById('green').onclick = function() {g_selectedColor = [0.0, 1.0, 0.0, 1.0];};
   // document.getElementById('red').onclick = function() {g_selectedColor = [1.0, 0.0, 0.0, 1.0];};
-  document.getElementById('clearButton').onclick = function() {g_shapesList = [];renderAllshapes();};
+  document.getElementById('clearButton').onclick = function() {
+    g_shapesList = [];
+    g_showPicture = false;
+    renderAllshapes();
+  };
+  document.getElementById('pictureButton').onclick = function() {
+    g_showPicture = true;
+    renderAllshapes();
+  };
 
   document.getElementById('pointButton').onclick = function() { g_selectedType = POINT};
   document.getElementById('triButton').onclick = function() { g_selectedType = TRIANGLE};
@@ -151,6 +160,10 @@ function renderAllshapes() {
 
   gl.clear(gl.COLOR_BUFFER_BIT);
 
+  if (g_showPicture) {
+    renderPicture();
+  }
+
   var len = g_shapesList.length;
   for (var i = 0; i < len; i++) {
     g_shapesList[i].render();
@@ -170,4 +183,65 @@ function sendTextToHTML(text, htmlID) {
     return;
   }
   htmlElm.innerHTML = text;
+}
+
+function drawColoredTriangle(vertices, rgba) {
+  gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
+  drawTriangle(vertices);
+}
+
+function renderPicture() {
+  const skyColor = [0.60, 0.84, 0.98, 1.0];
+  const grassColor = [0.30, 0.70, 0.28, 1.0];
+  const sunColor = [1.00, 0.86, 0.20, 1.0];
+  const mountainDark = [0.42, 0.43, 0.55, 1.0];
+  const mountainLight = [0.55, 0.56, 0.68, 1.0];
+  const houseWall = [0.91, 0.77, 0.58, 1.0];
+  const roofColor = [0.62, 0.20, 0.18, 1.0];
+  const doorColor = [0.40, 0.24, 0.12, 1.0];
+  const windowColor = [0.76, 0.90, 0.98, 1.0];
+  const trunkColor = [0.43, 0.27, 0.10, 1.0];
+  const leafColor = [0.13, 0.52, 0.21, 1.0];
+
+  const pictureTriangles = [
+    { color: skyColor, vertices: [-1.0, 1.0, -1.0, -0.1, 1.0, 1.0] },
+    { color: skyColor, vertices: [1.0, 1.0, -1.0, -0.1, 1.0, -0.1] },
+    { color: grassColor, vertices: [-1.0, -0.1, -1.0, -1.0, 1.0, -0.1] },
+    { color: grassColor, vertices: [1.0, -0.1, -1.0, -1.0, 1.0, -1.0] },
+
+    { color: sunColor, vertices: [0.55, 0.88, 0.42, 0.72, 0.68, 0.72] },
+    { color: sunColor, vertices: [0.55, 0.56, 0.42, 0.72, 0.68, 0.72] },
+    { color: sunColor, vertices: [0.39, 0.64, 0.55, 0.56, 0.42, 0.72] },
+    { color: sunColor, vertices: [0.71, 0.64, 0.55, 0.56, 0.68, 0.72] },
+
+    { color: mountainDark, vertices: [-0.95, -0.1, -0.50, 0.52, -0.10, -0.1] },
+    { color: mountainLight, vertices: [-0.58, 0.24, -0.50, 0.52, -0.34, 0.12] },
+    { color: mountainLight, vertices: [-0.32, -0.1, 0.10, 0.45, 0.42, -0.1] },
+    { color: mountainDark, vertices: [0.10, -0.1, 0.48, 0.58, 0.95, -0.1] },
+
+    { color: houseWall, vertices: [-0.28, -0.18, -0.28, -0.70, 0.26, -0.18] },
+    { color: houseWall, vertices: [0.26, -0.18, -0.28, -0.70, 0.26, -0.70] },
+    { color: roofColor, vertices: [-0.34, -0.18, -0.01, 0.16, 0.32, -0.18] },
+    { color: roofColor, vertices: [-0.02, 0.24, -0.10, 0.10, 0.06, 0.10] },
+
+    { color: doorColor, vertices: [-0.06, -0.40, -0.06, -0.70, 0.06, -0.40] },
+    { color: doorColor, vertices: [0.06, -0.40, -0.06, -0.70, 0.06, -0.70] },
+
+    { color: windowColor, vertices: [-0.23, -0.28, -0.23, -0.46, -0.09, -0.28] },
+    { color: windowColor, vertices: [-0.09, -0.28, -0.23, -0.46, -0.09, -0.46] },
+    { color: windowColor, vertices: [0.09, -0.28, 0.09, -0.46, 0.23, -0.28] },
+    { color: windowColor, vertices: [0.23, -0.28, 0.09, -0.46, 0.23, -0.46] },
+
+    { color: trunkColor, vertices: [0.62, -0.24, 0.62, -0.70, 0.74, -0.24] },
+    { color: trunkColor, vertices: [0.74, -0.24, 0.62, -0.70, 0.74, -0.70] },
+    { color: leafColor, vertices: [0.68, 0.10, 0.48, -0.24, 0.88, -0.24] },
+    { color: leafColor, vertices: [0.68, 0.34, 0.52, 0.00, 0.84, 0.00] },
+    { color: leafColor, vertices: [0.56, 0.00, 0.48, -0.24, 0.68, -0.14] },
+    { color: leafColor, vertices: [0.80, 0.00, 0.68, -0.14, 0.88, -0.24] }
+  ];
+
+  for (let i = 0; i < pictureTriangles.length; i++) {
+    const triangle = pictureTriangles[i];
+    drawColoredTriangle(triangle.vertices, triangle.color);
+  }
 }
