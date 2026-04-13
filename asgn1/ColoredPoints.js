@@ -65,8 +65,8 @@ function connectVariablestoGLSL() {
 }
 
 function addActionsForHtmlUiI() {
-  document.getElementById('green').onclick = function() {g_selectedColor = [0.0, 1.0, 0.0, 1.0];};
-  document.getElementById('red').onclick = function() {g_selectedColor = [1.0, 0.0, 0.0, 1.0];};
+  // document.getElementById('green').onclick = function() {g_selectedColor = [0.0, 1.0, 0.0, 1.0];};
+  // document.getElementById('red').onclick = function() {g_selectedColor = [1.0, 0.0, 0.0, 1.0];};
   document.getElementById('clearButton').onclick = function() {g_shapesList = [];renderAllshapes();};
 
   document.getElementById('pointButton').onclick = function() { g_selectedType = POINT};
