@@ -29,6 +29,8 @@ let g_selectedSegments = 10;
 let g_shapesList = [];
 let g_selectedType = POINT;
 let g_showPicture = false;
+let g_autoColorEnabled = false;
+let g_autoColorHue = 0;
 
 function setupWebGl() {
   canvas = document.getElementById('webgl');
@@ -77,6 +79,10 @@ function addActionsForHtmlUiI() {
     g_showPicture = true;
     renderAllshapes();
   };
+  document.getElementById('autoColorButton').onclick = function() {
+    g_autoColorEnabled = !g_autoColorEnabled;
+    this.textContent = g_autoColorEnabled ? 'Auto Color On' : 'Auto Color Off';
+  };
 
   document.getElementById('pointButton').onclick = function() { g_selectedType = POINT};
   document.getElementById('triButton').onclick = function() { g_selectedType = TRIANGLE};
@@ -105,6 +111,41 @@ function addActionsForHtmlUiI() {
   
 }
 
+function hsvToRgb(h, s, v) {
+  let r = 0;
+  let g = 0;
+  let b = 0;
+  const i = Math.floor(h * 6);
+  const f = h * 6 - i;
+  const p = v * (1 - s);
+  const q = v * (1 - f * s);
+  const t = v * (1 - (1 - f) * s);
+
+  switch (i % 6) {
+    case 0: r = v; g = t; b = p; break;
+    case 1: r = q; g = v; b = p; break;
+    case 2: r = p; g = v; b = t; break;
+    case 3: r = p; g = q; b = v; break;
+    case 4: r = t; g = p; b = v; break;
+    case 5: r = v; g = p; b = q; break;
+  }
+
+  return [r, g, b];
+}
+
+function setSliderValuesFromColor() {
+  document.getElementById('redSlide').value = Math.round(g_selectedColor[0] * 100);
+  document.getElementById('greenSlide').value = Math.round(g_selectedColor[1] * 100);
+  document.getElementById('blueSlide').value = Math.round(g_selectedColor[2] * 100);
+}
+
+function advanceAutoColor() {
+  const rgb = hsvToRgb(g_autoColorHue, 1, 1);
+  g_selectedColor = [rgb[0], rgb[1], rgb[2], 1.0];
+  g_autoColorHue = (g_autoColorHue + 0.08) % 1;
+  setSliderValuesFromColor();
+}
+
 function main() {
   setupWebGl();
   connectVariablestoGLSL();
@@ -123,6 +164,10 @@ function main() {
 
 function click(ev) {
   let [x, y] = convertCoordinatesEventoGL(ev);
+
+  if (g_autoColorEnabled) {
+    advanceAutoColor();
+  }
 
   //let point = new Point();
   let point;
