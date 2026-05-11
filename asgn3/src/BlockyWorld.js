@@ -1566,10 +1566,6 @@ function getPlayerAnimationMode() {
     return 4;
   }
 
-  if (g_playerIsMoving) {
-    return 1;
-  }
-
   return 0;
 }
 
@@ -2441,7 +2437,7 @@ function renderPlayerHorse() {
     z: g_playerZ,
     yaw: getPlayerHeadingDegrees(),
     seconds: g_seconds,
-    isMoving: g_playerIsMoving,
+    isMoving: false,
     animationMode: getPlayerAnimationMode(),
     scale: 1.62
   });
