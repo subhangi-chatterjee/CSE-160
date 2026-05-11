@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Blocky Animal</title>
+  </head>
+
+  <body onload="main()">
+    <canvas id="webgl" width="500" height="500">
+      Please use a browser that supports canvas
+    </canvas>
+
+    <p id="numdot">ms: 0 fps: 0</p>
+
+     <p>
+      Animation:
+      <button type="button" id="animation1Button">Animation 1</button>
+      <button type="button" id="animation2Button">Animation 2</button>
+      <button type="button" id="animation3Button">Animation 3</button>
+      <button type="button" id="animation4Button">Animation 4</button>
+      <button type="button" id="animationOffButton">OFF</button>
+      <button type="button" id="resetPoseButton">Reset</button>
+    </p>
+
+    <p>
+      Camera Angle
+      <input type="range" min="0" max="360" value="20" class="slider" id="angleSlide">
+    </p>
+
+    <p>
+      Front Upper Legs
+      <input type="range" min="-45" max="45" value="18" class="slider" id="frontUpperSlide">
+    </p>
+
+    <p>
+      Front Lower Legs
+      <input type="range" min="-45" max="45" value="8" class="slider" id="frontLowerSlide">
+    </p>
+
+    <p>
+      Back Upper Legs
+      <input type="range" min="-45" max="45" value="-9" class="slider" id="backUpperSlide">
+    </p>
+
+    <p>
+      Back Lower Legs
+      <input type="range" min="-45" max="45" value="-2" class="slider" id="backLowerSlide">
+    </p>
+
+    <p>
+      Head
+      <input type="range" min="-140" max="-40" value="-90" class="slider" id="headSlide">
+    </p>
+
+    <p>
+      Neck
+      <input type="range" min="0" max="100" value="80" class="slider" id="neckSlide">
+    </p>
+
+    <p>
+      Tail
+      <input type="range" min="-45" max="45" value="20" class="slider" id="tailSlide">
+    </p>
+
+    <p>
+      Tail Mid
+      <input type="range" min="-70" max="70" value="12" class="slider" id="tailTipSlide">
+    </p>
+
+    <p>
+      Tail End
+      <input type="range" min="-80" max="80" value="8" class="slider" id="tailCurlSlide">
+    </p>
+
+   
+
+    <p>Drag on the canvas to rotate. Shift-click for a special tail flick.</p>
+
+    <script src="lib/webgl-utils.js"></script>
+    <script src="lib/webgl-debug.js"></script>
+    <script src="lib/cuon-utils.js"></script>
+    <script src="lib/cuon-matrix.js"></script>
+
+    <script src="Triangle.js"></script>
+    <script src="Circle.js"></script>
+    <script src="Point.js"></script>
+    <script src="Cube.js"></script>
+    <script src="Cone.js"></script>
+    <script src="Prism.js"></script>
+    <script src="BlockyAnimal.js"></script>
+  </body>
+</html>

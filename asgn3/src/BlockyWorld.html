@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hazel's World</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --page: #eef3ea;
+        --panel: rgba(255, 252, 244, 0.92);
+        --ink: #233128;
+        --accent: #7f5f3c;
+        --accent-soft: #d8c29c;
+        --edge: rgba(79, 98, 76, 0.22);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Trebuchet MS", "Avenir Next", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top, rgba(255, 255, 255, 0.75), transparent 38%),
+          linear-gradient(180deg, #ddebe3 0%, #f3e8d1 100%);
+      }
+
+      .app {
+        display: grid;
+        grid-template-columns: minmax(280px, 340px) minmax(320px, 1fr);
+        gap: 20px;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--edge);
+        border-radius: 18px;
+        box-shadow: 0 18px 45px rgba(66, 79, 62, 0.12);
+        backdrop-filter: blur(14px);
+      }
+
+      .sidebar {
+        padding: 22px;
+      }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        font-size: 0.76rem;
+        color: #6d7f5d;
+      }
+
+      h1 {
+        margin: 0 0 14px;
+        font-size: 2.1rem;
+        line-height: 1.05;
+      }
+
+      p {
+        margin: 0 0 14px;
+        line-height: 1.55;
+      }
+
+      .story {
+        padding: 14px 16px;
+        border-radius: 14px;
+        background: rgba(215, 232, 209, 0.7);
+        border: 1px solid rgba(89, 122, 74, 0.18);
+      }
+
+      .stats {
+        margin-top: 18px;
+        padding: 16px;
+        border-radius: 14px;
+        background: rgba(255, 248, 232, 0.86);
+        border: 1px solid rgba(127, 95, 60, 0.15);
+      }
+
+      .stats p:last-child,
+      .controls li:last-child {
+        margin-bottom: 0;
+      }
+
+      .controls {
+        margin: 18px 0 0;
+        padding-left: 18px;
+      }
+
+      .controls li {
+        margin-bottom: 8px;
+      }
+
+      .mode-button {
+        margin-top: 16px;
+        padding: 10px 14px;
+        border: 0;
+        border-radius: 12px;
+        background: #7f5f3c;
+        color: #fff9ef;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 10px 20px rgba(87, 63, 38, 0.16);
+      }
+
+      .mode-button:hover {
+        background: #6c4f31;
+      }
+
+      .mode-button.active {
+        background: #456f3b;
+      }
+
+      .mode-button:disabled {
+        background: #b9ab96;
+        color: #f6f0e7;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+
+      .mode-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .tooltip-wrap {
+        position: relative;
+        display: inline-flex;
+      }
+
+      .tooltip-wrap::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        left: 50%;
+        bottom: calc(100% + 12px);
+        transform: translateX(-50%) translateY(8px);
+        min-width: 180px;
+        max-width: 250px;
+        padding: 9px 11px;
+        border-radius: 12px;
+        background: rgba(34, 44, 38, 0.94);
+        color: #fffaf1;
+        font-size: 0.85rem;
+        line-height: 1.35;
+        text-align: center;
+        box-shadow: 0 14px 28px rgba(31, 38, 33, 0.24);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 140ms ease, transform 140ms ease;
+        z-index: 10;
+      }
+
+      .tooltip-wrap::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: calc(100% + 6px);
+        transform: translateX(-50%) translateY(8px);
+        border-left: 7px solid transparent;
+        border-right: 7px solid transparent;
+        border-top: 7px solid rgba(34, 44, 38, 0.94);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 140ms ease, transform 140ms ease;
+        z-index: 10;
+      }
+
+      .tooltip-wrap:hover::after,
+      .tooltip-wrap:hover::before,
+      .tooltip-wrap:focus-within::after,
+      .tooltip-wrap:focus-within::before {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      .canvas-shell {
+        position: relative;
+        padding: 16px;
+      }
+
+      canvas {
+        display: block;
+        width: 100%;
+        min-height: 420px;
+        height: calc(100vh - 72px);
+        max-height: 760px;
+        border-radius: 18px;
+        background: #b9d6ea;
+        border: 1px solid rgba(76, 100, 98, 0.18);
+        outline: none;
+      }
+
+      .footer-note {
+        margin-top: 12px;
+        font-size: 0.95rem;
+        color: #5d6d60;
+      }
+
+      .gate-banner {
+        position: absolute;
+        z-index: 2;
+        top: 34px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-12px);
+        padding: 10px 18px;
+        border-radius: 999px;
+        border: 2px solid rgba(123, 57, 29, 0.28);
+        background: rgba(255, 248, 219, 0.95);
+        color: #8a3d1b;
+        font-size: 1.05rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        box-shadow: 0 12px 28px rgba(90, 52, 23, 0.16);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 160ms ease, transform 160ms ease;
+      }
+
+      .gate-banner.visible {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      .top-notice {
+        position: absolute;
+        z-index: 6;
+        top: 30px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-10px);
+        padding: 10px 18px;
+        border-radius: 999px;
+        border: 2px solid rgba(44, 116, 81, 0.25);
+        background: rgba(232, 255, 241, 0.97);
+        color: #256749;
+        font-size: 1rem;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        box-shadow: 0 12px 28px rgba(50, 102, 72, 0.16);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 180ms ease, transform 180ms ease;
+      }
+
+      .top-notice.visible {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      .victory-overlay {
+        position: absolute;
+        z-index: 8;
+        inset: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 220ms ease;
+      }
+
+      .victory-overlay.visible {
+        opacity: 1;
+      }
+
+      .victory-message {
+        padding: 18px 26px;
+        border-radius: 22px;
+        border: 3px solid rgba(255, 240, 166, 0.85);
+        background: linear-gradient(180deg, rgba(255, 109, 66, 0.94), rgba(255, 173, 60, 0.96));
+        color: #fffaf1;
+        font-size: clamp(2rem, 5vw, 3.4rem);
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-align: center;
+        text-shadow: 0 4px 12px rgba(97, 37, 6, 0.28);
+        box-shadow: 0 18px 40px rgba(117, 58, 18, 0.22);
+      }
+
+      .confetti-burst {
+        position: absolute;
+        z-index: 7;
+        inset: 16px;
+        overflow: hidden;
+        border-radius: 18px;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 180ms ease;
+      }
+
+      .confetti-burst.active {
+        opacity: 1;
+      }
+
+      .confetti-piece {
+        position: absolute;
+        top: -16%;
+        left: var(--left);
+        width: var(--size);
+        height: calc(var(--size) * 1.35);
+        background: var(--color);
+        opacity: 0.98;
+        transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+        animation: confetti-fall var(--duration) linear var(--delay) 1 both;
+        animation-play-state: paused;
+        transform-origin: center center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
+        will-change: transform, opacity;
+      }
+
+      .confetti-burst.active .confetti-piece {
+        animation-play-state: running;
+      }
+
+      .confetti-piece.shape-circle {
+        border-radius: 999px;
+      }
+
+      .confetti-piece.shape-square {
+        border-radius: 4px;
+      }
+
+      .confetti-piece.shape-diamond {
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      }
+
+      .confetti-piece.shape-triangle {
+        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+      }
+
+      .confetti-piece.shape-streamer {
+        width: calc(var(--size) * 0.45);
+        height: calc(var(--size) * 2.4);
+        border-radius: 999px;
+      }
+
+      @keyframes confetti-fall {
+        0% {
+          opacity: 0.96;
+          transform: translate3d(0, -8%, 0) rotate(0deg) scale(0.92);
+        }
+
+        10% {
+          opacity: 1;
+        }
+
+        100% {
+          opacity: 0.24;
+          transform: translate3d(var(--drift), 138%, 0) rotate(var(--spin)) scale(1.08);
+        }
+      }
+
+      @media (max-width: 980px) {
+        .app {
+          grid-template-columns: 1fr;
+        }
+
+        canvas {
+          min-height: 360px;
+          height: 60vh;
+        }
+      }
+    </style>
+  </head>
+  <body onload="main()">
+    <main class="app">
+      <section class="panel sidebar">
+        <p class="eyebrow">CSE 160 Assignment 3</p>
+        <h1>Hazel's World</h1>
+        <p class="story" id="storyLine">
+          Hazel needs to collect the apples, open the paddock gate, and walk inside to meet Clover.
+        </p>
+
+        <div class="stats">
+          <p id="statusLine">Loading world...</p>
+          <p id="targetLine">Looking for apples...</p>
+        </div>
+
+        <ul class="controls" id="controlsList">
+          <li><strong>Move:</strong> <code>W</code> <code>A</code> <code>S</code> <code>D</code></li>
+          <li><strong>Turn:</strong> <code>Q</code> / <code>E</code> or drag with the mouse</li>
+          <li><strong>Collect:</strong> walk up to an apple and press <code>Space</code></li>
+          <li><strong>Build:</strong> <code>F</code> adds a block, <code>R</code> removes one</li>
+          <li><strong>View:</strong> press <code>V</code> to switch between first-person and second-person horse view</li>
+          <li><strong>Explore:</strong> click the button below, then drag to look around and use the mouse wheel or <code>Z</code> / <code>X</code> to zoom</li>
+        </ul>
+
+        <div class="mode-row">
+          <span class="tooltip-wrap" data-tooltip="Free-look around the current world without moving Hazel.">
+            <button class="mode-button" id="exploreButton" type="button">Explore</button>
+          </span>
+          <span class="tooltip-wrap" data-tooltip="Go to the race track after you unlock it in the meadow.">
+            <button class="mode-button" id="raceTrackButton" type="button" disabled>Race track</button>
+          </span>
+          <span class="tooltip-wrap" data-tooltip="Visit Rainbow Land after you finish the race track.">
+            <button class="mode-button" id="rainbowLandButton" type="button" disabled>Rainbow Land</button>
+          </span>
+          <span class="tooltip-wrap" data-tooltip="Turn on grader mode to jump directly to later worlds for review.">
+            <button class="mode-button" id="graderButton" type="button">Grader</button>
+          </span>
+        </div>
+
+        <p class="footer-note">
+          This is a 3 world game, to go to the next world, you need to complete the previous game. <p>
+          1. Help hazel to get to Clover who is waiting behing the gate. Collect the apples to open the gate and guide Hazel in to meet Clover.</p>
+          <p>2. Race Hazel and Clover. Jump over the hurdles to get to the finish line.</p>
+            <p>3. Yeyy!! you have reached the last part! The winning horse is taken to the Rainbow World, explore and enjoy the view.</p>
+            <p>Thank you for playing! Hope you enjoyed!</p>
+      </section>
+
+      <section class="panel canvas-shell">
+        <div class="gate-banner" id="gateBanner">(gate opened)</div>
+        <div class="top-notice" id="topNotice">Race track is now open</div>
+        <div class="victory-overlay" id="victoryOverlay">
+          <div class="victory-message">VICTORY! Yay!!</div>
+        </div>
+        <div class="confetti-burst" id="confettiBurst"></div>
+        <canvas id="webgl" width="960" height="640" tabindex="0">
+          Please use a browser that supports canvas.
+        </canvas>
+      </section>
+    </main>
+
+    <script src="lib/webgl-utils.js"></script>
+    <script src="lib/webgl-debug.js"></script>
+    <script src="lib/cuon-utils.js"></script>
+    <script src="lib/cuon-matrix.js"></script>
+
+    <script src="js/Triangle.js"></script>
+    <script src="js/Cube.js"></script>
+    <script src="js/Cone.js"></script>
+    <script src="js/Sphere.js"></script>
+    <script src="js/LongDiamond.js"></script>
+    <script src="js/MeshModel.js"></script>
+    <script src="js/CementPotData.js"></script>
+    <script src="js/Camera.js"></script>
+    <script src="js/HorseAvatar.js"></script>
+    <script src="BlockyWorld.js"></script>
+  </body>
+</html>
