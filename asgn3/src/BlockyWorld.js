@@ -121,8 +121,8 @@ const FIELD_GRASS_DENSITY = 0.29;
 const FIELD_GRASS_ACCENT_DENSITY = 0.1;
 const FIELD_GRASS_FIRST_PERSON_DISTANCE = 12.5;
 const FIELD_GRASS_SECOND_PERSON_DISTANCE = 15.0;
-const FIELD_FLOWER_DENSITY = 0.12;
-const FIELD_FLOWER_ACCENT_DENSITY = 0.035;
+const FIELD_FLOWER_DENSITY = 0.07;
+const FIELD_FLOWER_ACCENT_DENSITY = 0.015;
 const FIELD_FLOWER_FIRST_PERSON_DISTANCE = 11.5;
 const FIELD_FLOWER_SECOND_PERSON_DISTANCE = 14.0;
 const RAINBOW_HAND_FLOWER_RENDER_DISTANCE = 22.0;
@@ -149,6 +149,20 @@ const FLOWER_BELL_PALETTES = [
   [[0.61, 0.29, 0.85, 1.0], [0.95, 0.8, 0.43, 1.0]],
   [[0.47, 0.7, 0.95, 1.0], [0.96, 0.84, 0.58, 1.0]],
   [[0.9, 0.58, 0.82, 1.0], [0.98, 0.82, 0.5, 1.0]]
+];
+const FIELD_TULIP_PALETTES = [
+  [[0.96, 0.66, 0.78, 1.0], [0.82, 0.45, 0.6, 1.0]],
+  [[0.98, 0.83, 0.42, 1.0], [0.9, 0.64, 0.2, 1.0]],
+  [[0.62, 0.8, 0.97, 1.0], [0.36, 0.58, 0.86, 1.0]],
+  [[0.8, 0.7, 0.98, 1.0], [0.58, 0.46, 0.86, 1.0]],
+  [[0.99, 0.74, 0.6, 1.0], [0.9, 0.52, 0.36, 1.0]]
+];
+const FIELD_BELL_PALETTES = [
+  [[0.98, 0.72, 0.82, 1.0], [0.98, 0.86, 0.5, 1.0]],
+  [[0.62, 0.79, 0.98, 1.0], [0.98, 0.88, 0.56, 1.0]],
+  [[0.95, 0.83, 0.44, 1.0], [0.94, 0.7, 0.24, 1.0]],
+  [[0.78, 0.67, 0.97, 1.0], [0.96, 0.84, 0.58, 1.0]],
+  [[0.99, 0.7, 0.56, 1.0], [0.99, 0.82, 0.46, 1.0]]
 ];
 const VICTORY_MESSAGE_DURATION = 5.0;
 const RACE_RESULT_DURATION = 2.4;
@@ -1926,29 +1940,31 @@ function buildFieldFlowerPatches() {
         continue;
       }
 
-      if (grassNoise(x, z, 11) < FIELD_FLOWER_DENSITY) {
+      if (sceneNoise(x, z, 11) < FIELD_FLOWER_DENSITY) {
         patches.push({
           cellX: x,
           cellZ: z,
-          x: cellToWorld(x) + 0.12 + grassNoise(x, z, 12) * 0.74,
-          z: cellToWorld(z) + 0.1 + grassNoise(x, z, 13) * 0.76,
-          scale: 0.62 + grassNoise(x, z, 14) * 0.2,
-          type: grassNoise(x, z, 15) < 0.36 ? 'bell' : 'tulip',
-          paletteIndex: Math.floor(grassNoise(x, z, 16) * FLOWER_TULIP_PALETTES.length),
-          leanDir: grassNoise(x, z, 17) < 0.5 ? -1 : 1
+          x: cellToWorld(x) + 0.12 + sceneNoise(x, z, 12) * 0.74,
+          z: cellToWorld(z) + 0.1 + sceneNoise(x, z, 13) * 0.76,
+          scale: 0.62 + sceneNoise(x, z, 14) * 0.2,
+          type: sceneNoise(x, z, 15) < 0.36 ? 'bell' : 'tulip',
+          paletteFamily: 'field',
+          paletteIndex: Math.floor(sceneNoise(x, z, 16) * FIELD_TULIP_PALETTES.length),
+          leanDir: sceneNoise(x, z, 17) < 0.5 ? -1 : 1
         });
       }
 
-      if (grassNoise(x, z, 18) < FIELD_FLOWER_ACCENT_DENSITY) {
+      if (sceneNoise(x, z, 18) < FIELD_FLOWER_ACCENT_DENSITY) {
         patches.push({
           cellX: x,
           cellZ: z,
-          x: cellToWorld(x) + 0.26 + grassNoise(x, z, 19) * 0.46,
-          z: cellToWorld(z) + 0.22 + grassNoise(x, z, 20) * 0.46,
-          scale: 0.48 + grassNoise(x, z, 21) * 0.14,
-          type: grassNoise(x, z, 22) < 0.28 ? 'bell' : 'tulip',
-          paletteIndex: Math.floor(grassNoise(x, z, 23) * FLOWER_TULIP_PALETTES.length),
-          leanDir: grassNoise(x, z, 24) < 0.5 ? -1 : 1
+          x: cellToWorld(x) + 0.26 + sceneNoise(x, z, 19) * 0.46,
+          z: cellToWorld(z) + 0.22 + sceneNoise(x, z, 20) * 0.46,
+          scale: 0.48 + sceneNoise(x, z, 21) * 0.14,
+          type: sceneNoise(x, z, 22) < 0.28 ? 'bell' : 'tulip',
+          paletteFamily: 'field',
+          paletteIndex: Math.floor(sceneNoise(x, z, 23) * FIELD_TULIP_PALETTES.length),
+          leanDir: sceneNoise(x, z, 24) < 0.5 ? -1 : 1
         });
       }
     }
@@ -2133,13 +2149,20 @@ function getFieldFlowerRenderDistanceSq() {
 }
 
 function renderFlowerPatch(patch) {
+  const tulipPalettes = patch.paletteFamily === 'field'
+    ? FIELD_TULIP_PALETTES
+    : FLOWER_TULIP_PALETTES;
+  const bellPalettes = patch.paletteFamily === 'field'
+    ? FIELD_BELL_PALETTES
+    : FLOWER_BELL_PALETTES;
+
   if (patch.type === 'bell') {
-    const bellPalette = FLOWER_BELL_PALETTES[patch.paletteIndex % FLOWER_BELL_PALETTES.length];
+    const bellPalette = bellPalettes[patch.paletteIndex % bellPalettes.length];
     renderRainbowBellFlower(patch.x, patch.z, patch.scale, bellPalette[0], bellPalette[1], patch.leanDir);
     return;
   }
 
-  const tulipPalette = FLOWER_TULIP_PALETTES[patch.paletteIndex % FLOWER_TULIP_PALETTES.length];
+  const tulipPalette = tulipPalettes[patch.paletteIndex % tulipPalettes.length];
   renderRainbowFlower(patch.x, patch.z, patch.scale, tulipPalette[0], tulipPalette[1]);
 }
 
