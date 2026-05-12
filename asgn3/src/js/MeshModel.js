@@ -1,5 +1,5 @@
 class MeshModel {
-  constructor(data, textureSrc) {
+  constructor(data, textureSrc, textureUnit) {
     this.color = [0.86, 0.86, 0.86, 1.0];
     this.matrix = new Matrix4();
     this.positions = data.positions;
@@ -7,6 +7,7 @@ class MeshModel {
     this.indices = data.indices;
     this.bounds = data.bounds;
     this.textureSrc = textureSrc || '';
+    this.textureUnit = textureUnit === undefined ? 0 : textureUnit;
     this.vertexBuffer = null;
     this.uvBuffer = null;
     this.indexBuffer = null;
@@ -43,8 +44,8 @@ class MeshModel {
     const image = new Image();
     image.onload = () => {
       const previousActiveTexture = gl.getParameter(gl.ACTIVE_TEXTURE);
-      gl.activeTexture(gl.TEXTURE0);
-      const previousTexture0Binding = gl.getParameter(gl.TEXTURE_BINDING_2D);
+      gl.activeTexture(gl.TEXTURE0 + this.textureUnit);
+      const previousTextureBinding = gl.getParameter(gl.TEXTURE_BINDING_2D);
 
       const texture = gl.createTexture();
       const isPowerOfTwoTexture =
@@ -60,14 +61,14 @@ class MeshModel {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
       } else {
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
       }
 
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
       this.texture = texture;
       this.textureLoaded = true;
-      gl.bindTexture(gl.TEXTURE_2D, previousTexture0Binding);
+      gl.bindTexture(gl.TEXTURE_2D, previousTextureBinding);
       gl.activeTexture(previousActiveTexture);
       renderScene();
     };
@@ -93,11 +94,11 @@ class MeshModel {
     let restoreTexture = null;
     const previousActiveTexture = gl.getParameter(gl.ACTIVE_TEXTURE);
     if (this.textureLoaded && this.texture) {
-      gl.activeTexture(gl.TEXTURE0);
+      gl.activeTexture(gl.TEXTURE0 + this.textureUnit);
       restoreTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
       gl.bindTexture(gl.TEXTURE_2D, this.texture);
-      gl.uniform1i(u_Samplers[0], 0);
-      gl.uniform1i(u_WhichTexture, 0);
+      gl.uniform1i(u_Samplers[this.textureUnit], this.textureUnit);
+      gl.uniform1i(u_WhichTexture, this.textureUnit);
       gl.uniform1f(u_TexColorWeight, 1.0);
     } else {
       gl.uniform1i(u_WhichTexture, -1);
@@ -107,7 +108,7 @@ class MeshModel {
     gl.drawElements(gl.TRIANGLES, this.indices.length, this.indexType, 0);
 
     if (this.textureLoaded) {
-      gl.activeTexture(gl.TEXTURE0);
+      gl.activeTexture(gl.TEXTURE0 + this.textureUnit);
       gl.bindTexture(gl.TEXTURE_2D, restoreTexture);
     }
 

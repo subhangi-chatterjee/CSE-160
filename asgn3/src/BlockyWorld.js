@@ -90,7 +90,19 @@ const TEXTURE_IDS = {
   glass: 5,
   flowerWater: 6,
   pondStone: 7,
-  pondStoneAccent: 8
+  model: 8
+};
+
+const TEXTURE_PLACEHOLDER_PIXELS = {
+  0: new Uint8Array([82, 132, 62, 255]),
+  1: new Uint8Array([205, 213, 223, 255]),
+  2: new Uint8Array([176, 134, 86, 255]),
+  3: new Uint8Array([92, 154, 214, 255]),
+  4: new Uint8Array([164, 196, 236, 255]),
+  5: new Uint8Array([210, 168, 214, 255]),
+  6: new Uint8Array([92, 154, 214, 255]),
+  7: new Uint8Array([205, 213, 223, 255]),
+  8: new Uint8Array([212, 188, 132, 255])
 };
 
 const FIELD_GRASS_COLORS = {
@@ -466,13 +478,55 @@ function resizeCanvas() {
   g_camera.setAspect(canvas.width / canvas.height);
 }
 
-function loadTexture(unit, source) {
+function configureTextureParameters(isPowerOfTwoTexture) {
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+  if (isPowerOfTwoTexture) {
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+  } else {
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  }
+}
+
+function ensureTextureSlot(unit) {
+  if (g_loadedTextures[unit]) {
+    return g_loadedTextures[unit];
+  }
+
+  const previousActiveTexture = gl.getParameter(gl.ACTIVE_TEXTURE);
+  const texture = gl.createTexture();
+  const pixel = TEXTURE_PLACEHOLDER_PIXELS[unit] || new Uint8Array([255, 255, 255, 255]);
+
+  gl.activeTexture(gl.TEXTURE0 + unit);
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  configureTextureParameters(false);
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    1,
+    1,
+    0,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    pixel
+  );
   gl.uniform1i(u_Samplers[unit], unit);
+  gl.activeTexture(previousActiveTexture);
+
+  g_loadedTextures[unit] = texture;
+  return texture;
+}
+
+function loadTexture(unit, source) {
+  const texture = ensureTextureSlot(unit);
 
   const image = new Image();
   image.onload = function() {
     const previousActiveTexture = gl.getParameter(gl.ACTIVE_TEXTURE);
-    const texture = gl.createTexture();
     const isPowerOfTwoTexture =
       (image.width & (image.width - 1)) === 0 &&
       (image.height & (image.height - 1)) === 0;
@@ -480,20 +534,9 @@ function loadTexture(unit, source) {
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
     gl.activeTexture(gl.TEXTURE0 + unit);
     gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-
-    if (isPowerOfTwoTexture) {
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-    } else {
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    }
-
+    configureTextureParameters(isPowerOfTwoTexture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
     gl.uniform1i(u_Samplers[unit], unit);
-    g_loadedTextures[unit] = texture;
     gl.activeTexture(previousActiveTexture);
     renderScene();
   };
@@ -501,6 +544,7 @@ function loadTexture(unit, source) {
 }
 
 function initTextures() {
+  g_loadedTextures = {};
   loadTexture(TEXTURE_IDS.grass, 'textures/grass.svg');
   loadTexture(TEXTURE_IDS.stone, 'textures/stone.svg');
   loadTexture(TEXTURE_IDS.plank, 'textures/planks.svg');
@@ -509,11 +553,11 @@ function initTextures() {
   loadTexture(TEXTURE_IDS.glass, 'textures/portal-rose-glass.jpeg?portal-rose-v3');
   loadTexture(TEXTURE_IDS.flowerWater, 'textures/water.jpeg');
   loadTexture(TEXTURE_IDS.pondStone, 'textures/stone.svg?rainbow-brick-v1');
-  loadTexture(TEXTURE_IDS.pondStoneAccent, 'textures/stone.svg?rainbow-brick-cap-v1');
+  ensureTextureSlot(TEXTURE_IDS.model);
 }
 
 function initImportedModels() {
-  g_cementPotModel = new MeshModel(CEMENT_POT_MODEL_DATA, 'textures/cement-pot.png');
+  g_cementPotModel = new MeshModel(CEMENT_POT_MODEL_DATA, 'textures/cement-pot.png', TEXTURE_IDS.model);
   g_cementPotModel.color = [0.92, 0.92, 0.92, 1.0];
 }
 
