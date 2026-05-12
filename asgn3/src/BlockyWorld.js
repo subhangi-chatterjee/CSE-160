@@ -438,6 +438,7 @@ let g_raceResultStartSeconds = -1;
 let g_rainbowChampion = null;
 let g_graderMode = false;
 let g_controlsGuideKey = '';
+let g_uiRefs = null;
 
 function setupWebGL() {
   canvas = document.getElementById('webgl');
@@ -613,6 +614,24 @@ function setTopNotice(text, isVisible) {
     topNotice.textContent = text;
   }
   topNotice.classList.toggle('visible', !!isVisible);
+}
+
+function getUiRefs() {
+  if (!g_uiRefs) {
+    g_uiRefs = {
+      statusLine: document.getElementById('statusLine'),
+      targetLine: document.getElementById('targetLine'),
+      storyLine: document.getElementById('storyLine'),
+      gateBanner: document.getElementById('gateBanner')
+    };
+  }
+  return g_uiRefs;
+}
+
+function setTextIfChanged(element, text) {
+  if (element && element.textContent !== text) {
+    element.textContent = text;
+  }
 }
 
 function updateControlsGuide() {
@@ -1677,20 +1696,22 @@ function updateHud() {
   const frontCell = getFrontCell();
   const selectedApple = getAppleInCell(frontCell);
   const nearbyApple = getNearbyApple(APPLE_REACH);
-  const targetLine = document.getElementById('targetLine');
-  const storyLine = document.getElementById('storyLine');
-  const gateBanner = document.getElementById('gateBanner');
+  const uiRefs = getUiRefs();
+  const statusLine = uiRefs.statusLine;
+  const targetLine = uiRefs.targetLine;
+  const storyLine = uiRefs.storyLine;
+  const gateBanner = uiRefs.gateBanner;
   updateControlsGuide();
 
   if (g_gameMode === GAME_MODES.rainbow) {
-    document.getElementById('statusLine').textContent =
+    setTextIfChanged(statusLine,
       'FPS ' + g_fps.toFixed(1) +
       ' | Rainbow Land' +
       ' | Camera roam' +
-      ' | ' + g_statusFlash;
+      ' | ' + g_statusFlash);
 
-    targetLine.textContent = 'Move with W/A/S/D, turn with Q/E or drag with the mouse, and use the mouse wheel or Z/X to zoom.';
-    storyLine.textContent = 'Welcome to Rainbow Land. Explore and enjoy';
+    setTextIfChanged(targetLine, 'Move with W/A/S/D, turn with Q/E or drag with the mouse, and use the mouse wheel or Z/X to zoom.');
+    setTextIfChanged(storyLine, 'Welcome to Rainbow Land. Explore and enjoy');
 
     if (gateBanner) {
       gateBanner.classList.remove('visible');
@@ -1699,18 +1720,18 @@ function updateHud() {
   }
 
   if (g_gameMode === GAME_MODES.race) {
-    document.getElementById('statusLine').textContent =
+    setTextIfChanged(statusLine,
       'FPS ' + g_fps.toFixed(1) +
       ' | Race track' +
-      ' | ' + (g_raceWinner ? g_raceWinner + ' wins!' : 'Hazel W/S | Clover I/K');
+      ' | ' + (g_raceWinner ? g_raceWinner + ' wins!' : 'Hazel W/S | Clover I/K'));
 
-    targetLine.textContent = g_raceWinner
+    setTextIfChanged(targetLine, g_raceWinner
       ? g_raceWinner + ' reached the finish line first. Rainbow Land is loading.'
-      : 'Top-down race controls: Hazel uses W to run and S to jump. Clover uses I to run and K to jump.';
+      : 'Top-down race controls: Hazel uses W to run and S to jump. Clover uses I to run and K to jump.');
 
-    storyLine.textContent = g_raceWinner
+    setTextIfChanged(storyLine, g_raceWinner
       ? g_raceWinner + ' won the hurdle race across the track.'
-      : 'Race Hazel and Clover from left to right, and jump over the hurdles at the right time.';
+      : 'Race Hazel and Clover from left to right, and jump over the hurdles at the right time.');
 
     if (gateBanner) {
       gateBanner.classList.remove('visible');
@@ -1718,42 +1739,42 @@ function updateHud() {
     return;
   }
 
-  document.getElementById('statusLine').textContent =
+  setTextIfChanged(statusLine,
     'FPS ' + g_fps.toFixed(1) +
     ' | Apples ' + collectedCount + '/' + g_apples.length +
     ' | Mode ' + getControlModeLabel() +
     ' | View ' + getViewModeLabel() +
     ' | Gate ' + (g_gateOpened ? 'open' : 'closed') +
-    ' | ' + g_statusFlash;
+    ' | ' + g_statusFlash);
 
   if (g_storyComplete) {
-    targetLine.textContent = 'Goal complete: Hazel and Clover are together inside the paddock.';
+    setTextIfChanged(targetLine, 'Goal complete: Hazel and Clover are together inside the paddock.');
   } else if (isExploreMode()) {
-    targetLine.textContent = 'Explore mode: move with W/A/S/D, drag to look, use the mouse wheel or Z/X to zoom.';
+    setTextIfChanged(targetLine, 'Explore mode: move with W/A/S/D, drag to look, use the mouse wheel or Z/X to zoom.');
   } else if (selectedApple) {
-    targetLine.textContent =
-      'Selected apple: press Space to collect the ' + selectedApple.label + '.';
+    setTextIfChanged(targetLine,
+      'Selected apple: press Space to collect the ' + selectedApple.label + '.');
   } else if (nearbyApple) {
-    targetLine.textContent =
-      'Apple nearby: press Space to collect the ' + nearbyApple.label + '.';
+    setTextIfChanged(targetLine,
+      'Apple nearby: press Space to collect the ' + nearbyApple.label + '.');
   } else if (g_gateOpened) {
-    targetLine.textContent = 'Next goal: lead Hazel through the open gate to meet Clover.';
+    setTextIfChanged(targetLine, 'Next goal: lead Hazel through the open gate to meet Clover.');
   } else if (remainingApples > 0) {
-    targetLine.textContent =
-      'Next goal: find the remaining ' + remainingApples + ' apple' + (remainingApples === 1 ? '' : 's') + ' to open the gate.';
+    setTextIfChanged(targetLine,
+      'Next goal: find the remaining ' + remainingApples + ' apple' + (remainingApples === 1 ? '' : 's') + ' to open the gate.');
   } else if (frontCell) {
-    targetLine.textContent =
-      'Build target: cell (' + frontCell.x + ', ' + frontCell.z + ') has height ' + g_worldMap[frontCell.z][frontCell.x] + '.';
+    setTextIfChanged(targetLine,
+      'Build target: cell (' + frontCell.x + ', ' + frontCell.z + ') has height ' + g_worldMap[frontCell.z][frontCell.x] + '.');
   } else {
-    targetLine.textContent = 'Build target: outside the map border.';
+    setTextIfChanged(targetLine, 'Build target: outside the map border.');
   }
 
   if (g_storyComplete) {
-    storyLine.textContent = 'Hazel made it into the paddock and finally met Clover.';
+    setTextIfChanged(storyLine, 'Hazel made it into the paddock and finally met Clover.');
   } else if (g_gateOpened) {
-    storyLine.textContent = 'The gate is open. Lead Hazel into the paddock so she can meet Clover.';
+    setTextIfChanged(storyLine, 'The gate is open. Lead Hazel into the paddock so she can meet Clover.');
   } else {
-    storyLine.textContent = 'Collect the three apples to open the paddock gate, then guide Hazel inside to meet Clover.';
+    setTextIfChanged(storyLine, 'Collect the three apples to open the paddock gate, then guide Hazel inside to meet Clover.');
   }
 
   if (gateBanner) {
