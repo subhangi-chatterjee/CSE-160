@@ -42,6 +42,10 @@ class MeshModel {
 
     const image = new Image();
     image.onload = () => {
+      const previousActiveTexture = gl.getParameter(gl.ACTIVE_TEXTURE);
+      gl.activeTexture(gl.TEXTURE0);
+      const previousTexture0Binding = gl.getParameter(gl.TEXTURE_BINDING_2D);
+
       const texture = gl.createTexture();
       const isPowerOfTwoTexture =
         (image.width & (image.width - 1)) === 0 &&
@@ -63,6 +67,8 @@ class MeshModel {
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
       this.texture = texture;
       this.textureLoaded = true;
+      gl.bindTexture(gl.TEXTURE_2D, previousTexture0Binding);
+      gl.activeTexture(previousActiveTexture);
       renderScene();
     };
     image.src = this.textureSrc;
@@ -85,10 +91,12 @@ class MeshModel {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
 
     let restoreTexture = null;
+    const previousActiveTexture = gl.getParameter(gl.ACTIVE_TEXTURE);
     if (this.textureLoaded && this.texture) {
-      restoreTexture = g_loadedTextures[0] || null;
       gl.activeTexture(gl.TEXTURE0);
+      restoreTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
       gl.bindTexture(gl.TEXTURE_2D, this.texture);
+      gl.uniform1i(u_Samplers[0], 0);
       gl.uniform1i(u_WhichTexture, 0);
       gl.uniform1f(u_TexColorWeight, 1.0);
     } else {
@@ -102,5 +110,7 @@ class MeshModel {
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, restoreTexture);
     }
+
+    gl.activeTexture(previousActiveTexture);
   }
 }
