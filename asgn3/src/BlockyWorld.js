@@ -128,93 +128,6 @@ const RAINBOW_PORTAL_RENDER_DISTANCE = 29.0;
 const RAINBOW_HAND_FLOWER_MIN_DISTANCE = 1.7;
 const RAINBOW_FIELD_FLOWER_MIN_DISTANCE = 2.2;
 const RAINBOW_FLOWER_WATER_MARGIN = 0.16;
-
-function getEffectiveFps() {
-  return g_fps > 1 ? g_fps : 60;
-}
-
-function getPerformanceTier() {
-  const fps = getEffectiveFps();
-  if (fps < 15) {
-    return 0;
-  }
-  if (fps < 22) {
-    return 1;
-  }
-  if (fps < 32) {
-    return 2;
-  }
-  return 3;
-}
-
-function getAdaptiveDistance(baseDistance, family) {
-  const tier = getPerformanceTier();
-  let scales = [1.0, 1.0, 1.0, 1.0];
-
-  switch (family) {
-    case 'worldBlocks':
-      scales = [0.62, 0.76, 0.9, 1.0];
-      break;
-    case 'fieldGrass':
-      scales = [0.5, 0.68, 0.84, 1.0];
-      break;
-    case 'fieldFlower':
-      scales = [0.58, 0.74, 0.88, 1.0];
-      break;
-    case 'rainbowTree':
-      scales = [0.72, 0.82, 0.92, 1.0];
-      break;
-    case 'rainbowBush':
-      scales = [0.62, 0.78, 0.9, 1.0];
-      break;
-    case 'rainbowHandFlower':
-      scales = [0.7, 0.84, 0.94, 1.0];
-      break;
-    case 'rainbowFlower':
-      scales = [0.55, 0.7, 0.86, 1.0];
-      break;
-    case 'rainbowGrass':
-      scales = [0.55, 0.72, 0.86, 1.0];
-      break;
-    case 'rainbowLilypad':
-      scales = [0.64, 0.82, 0.92, 1.0];
-      break;
-    case 'rainbowButterfly':
-      scales = [0.58, 0.74, 0.9, 1.0];
-      break;
-  }
-
-  return baseDistance * scales[tier];
-}
-
-function getAdaptiveDetailStride(family) {
-  const tier = getPerformanceTier();
-
-  switch (family) {
-    case 'fieldGrass':
-      return [4, 3, 2, 1][tier];
-    case 'fieldFlower':
-      return [3, 2, 2, 1][tier];
-    case 'rainbowBush':
-      return [2, 2, 1, 1][tier];
-    case 'rainbowHandFlower':
-      return [2, 1, 1, 1][tier];
-    case 'rainbowFlower':
-      return [2, 2, 1, 1][tier];
-    case 'rainbowGrass':
-      return [4, 3, 2, 1][tier];
-    case 'rainbowLilypad':
-      return [2, 2, 1, 1][tier];
-    case 'rainbowButterfly':
-      return [3, 2, 1, 1][tier];
-    default:
-      return 1;
-  }
-}
-
-function shouldRenderAdaptiveDetail(index, family) {
-  return index % getAdaptiveDetailStride(family) === 0;
-}
 const FLOWER_TULIP_PALETTES = [
   [[0.95, 0.68, 0.8, 1.0], [0.74, 0.46, 0.63, 1.0]],
   [[0.98, 0.78, 0.85, 1.0], [0.79, 0.55, 0.7, 1.0]],
@@ -1829,18 +1742,11 @@ function drawConeShape(matrix, color, segments) {
   gl.uniform1i(u_WhichTexture, -1);
   gl.uniform1f(u_TexColorWeight, 0.0);
 
-  let segmentCount = segments || 6;
-  const tier = getPerformanceTier();
-  if (tier === 0) {
-    segmentCount = Math.max(4, Math.floor(segmentCount * 0.5));
-  } else if (tier === 1) {
-    segmentCount = Math.max(5, Math.floor(segmentCount * 0.75));
-  }
-
-  g_cone.matrix.set(matrix);
-  g_cone.color = color;
-  g_cone.segments = segmentCount;
-  g_cone.render();
+  const cone = new Cone();
+  cone.color = color;
+  cone.matrix = matrix;
+  cone.segments = segments || 6;
+  cone.render();
 }
 
 function renderFieldGrassBlade(baseMatrix, tx, ty, tz, sideSign, bendScale, sizeScale, colors) {
@@ -1875,14 +1781,9 @@ function renderFieldGrassBlade(baseMatrix, tx, ty, tz, sideSign, bendScale, size
 
 function renderFieldGrassClump(baseMatrix, tx, ty, tz, scale, colors) {
   const palette = colors || FIELD_GRASS_COLORS;
-  const tier = getPerformanceTier();
   renderFieldGrassBlade(baseMatrix, tx, ty, tz, -1, 0.2, scale, palette);
-  if (tier >= 1) {
-    renderFieldGrassBlade(baseMatrix, tx + 0.03 * scale, ty + 0.002, tz + 0.015 * scale, 1, 0.45, scale * 1.05, palette);
-  }
-  if (tier >= 2) {
-    renderFieldGrassBlade(baseMatrix, tx - 0.028 * scale, ty, tz - 0.012 * scale, -1, 0.65, scale * 0.92, palette);
-  }
+  renderFieldGrassBlade(baseMatrix, tx + 0.03 * scale, ty + 0.002, tz + 0.015 * scale, 1, 0.45, scale * 1.05, palette);
+  renderFieldGrassBlade(baseMatrix, tx - 0.028 * scale, ty, tz - 0.012 * scale, -1, 0.65, scale * 0.92, palette);
 }
 
 function grassNoise(cellX, cellZ, seed) {
@@ -2174,18 +2075,16 @@ function buildRainbowFlowerPatches() {
 }
 
 function getFieldGrassRenderDistanceSq() {
-  const baseDistance = g_viewMode === VIEW_MODES.second
+  const renderDistance = g_viewMode === VIEW_MODES.second
     ? FIELD_GRASS_SECOND_PERSON_DISTANCE
     : FIELD_GRASS_FIRST_PERSON_DISTANCE;
-  const renderDistance = getAdaptiveDistance(baseDistance, 'fieldGrass');
   return renderDistance * renderDistance;
 }
 
 function getFieldFlowerRenderDistanceSq() {
-  const baseDistance = g_viewMode === VIEW_MODES.second
+  const renderDistance = g_viewMode === VIEW_MODES.second
     ? FIELD_FLOWER_SECOND_PERSON_DISTANCE
     : FIELD_FLOWER_FIRST_PERSON_DISTANCE;
-  const renderDistance = getAdaptiveDistance(baseDistance, 'fieldFlower');
   return renderDistance * renderDistance;
 }
 
@@ -2326,10 +2225,6 @@ function renderFieldGrass() {
   const maxDistanceSq = getFieldGrassRenderDistanceSq();
 
   for (let i = 0; i < g_fieldGrassPatches.length; i += 1) {
-    if (!shouldRenderAdaptiveDetail(i, 'fieldGrass')) {
-      continue;
-    }
-
     const patch = g_fieldGrassPatches[i];
     const dx = patch.x - playerX;
     const dz = patch.z - playerZ;
@@ -2351,10 +2246,6 @@ function renderFieldFlowers() {
   const maxDistanceSq = getFieldFlowerRenderDistanceSq();
 
   for (let i = 0; i < g_fieldFlowerPatches.length; i += 1) {
-    if (!shouldRenderAdaptiveDetail(i, 'fieldFlower')) {
-      continue;
-    }
-
     const patch = g_fieldFlowerPatches[i];
     const dx = patch.x - playerX;
     const dz = patch.z - playerZ;
@@ -2438,24 +2329,10 @@ function getWallColor(x, z, y) {
 }
 
 function renderWorldBlocks() {
-  const focusX = isExploreMode() ? g_camera.eye.elements[0] : g_playerX;
-  const focusZ = isExploreMode() ? g_camera.eye.elements[2] : g_playerZ;
-  const baseDistance = isExploreMode()
-    ? 24.0
-    : (g_viewMode === VIEW_MODES.second ? 22.0 : 19.5);
-  const maxDistance = getAdaptiveDistance(baseDistance, 'worldBlocks');
-  const maxDistanceSq = maxDistance * maxDistance;
-
   for (let z = 0; z < WORLD_SIZE; z += 1) {
     for (let x = 0; x < WORLD_SIZE; x += 1) {
       const columnHeight = g_worldMap[z][x];
       if (columnHeight <= 0) {
-        continue;
-      }
-
-      const dx = cellCenter(x) - focusX;
-      const dz = cellCenter(z) - focusZ;
-      if (dx * dx + dz * dz > maxDistanceSq) {
         continue;
       }
 
@@ -3090,14 +2967,8 @@ function renderRainbowGrassPatch(x, z, scale, yaw) {
   renderFieldGrassClump(clumpBase, 0.0, 0.0, 0.0, scale, RAINBOW_GRASS_COLORS);
 }
 
-function renderResolvedRainbowFlowers(patches, maxDistance, detailFamily) {
-  const family = detailFamily || 'rainbowFlower';
-
+function renderResolvedRainbowFlowers(patches, maxDistance) {
   for (let i = 0; i < patches.length; i += 1) {
-    if (!shouldRenderAdaptiveDetail(i, family)) {
-      continue;
-    }
-
     if (!isRainbowDetailVisible(patches[i].x, patches[i].z, maxDistance)) {
       continue;
     }
@@ -3968,7 +3839,6 @@ function renderRainbowBridge(centerX, centerZ, scale) {
 }
 
 function renderRainbowArc(centerX, baseY, centerZ, radius) {
-  const tier = getPerformanceTier();
   const rainbowColors = [
     [0.94, 0.36, 0.31, 0.88],
     [0.97, 0.58, 0.25, 0.86],
@@ -3980,8 +3850,7 @@ function renderRainbowArc(centerX, baseY, centerZ, radius) {
   ];
   const startAngle = 24;
   const endAngle = 156;
-  const angleStep = tier >= 3 ? 4.8 : (tier === 2 ? 6.2 : (tier === 1 ? 8.2 : 10.5));
-  const drawGlow = tier >= 2;
+  const angleStep = 4.8;
 
   for (let band = 0; band < rainbowColors.length; band += 1) {
     const bandRadius = radius - band * 0.42;
@@ -3996,9 +3865,7 @@ function renderRainbowArc(centerX, baseY, centerZ, radius) {
       const angle = angleDegrees * Math.PI / 180;
       const x = centerX + Math.cos(angle) * bandRadius;
       const y = baseY + Math.sin(angle) * bandRadius;
-      if (drawGlow) {
-        drawBox(x - 0.62, y - 0.04, centerZ - 0.22, 1.24, 0.18, 0.44, glowColor, -1, 0.0);
-      }
+      drawBox(x - 0.62, y - 0.04, centerZ - 0.22, 1.24, 0.18, 0.44, glowColor, -1, 0.0);
       drawBox(x - 0.42, y, centerZ - 0.18, 0.84, 0.14, 0.36, rainbowColors[band], -1, 0.0);
     }
   }
@@ -4058,17 +3925,9 @@ function renderRainbowLandScene() {
     drawBox(-1.96, 0.1, -8.92, 3.92, 0.04, 1.34, [0.99, 0.99, 1.0, 1.0], TEXTURE_IDS.stone, 0.74);
   }
 
-  const treeDistance = getAdaptiveDistance(RAINBOW_TREE_RENDER_DISTANCE, 'rainbowTree');
-  const bushDistance = getAdaptiveDistance(RAINBOW_BUSH_RENDER_DISTANCE, 'rainbowBush');
-  const handFlowerDistance = getAdaptiveDistance(RAINBOW_HAND_FLOWER_RENDER_DISTANCE, 'rainbowHandFlower');
-  const flowerDistance = getAdaptiveDistance(RAINBOW_FLOWER_RENDER_DISTANCE, 'rainbowFlower');
-  const grassDistance = getAdaptiveDistance(RAINBOW_GRASS_RENDER_DISTANCE, 'rainbowGrass');
-  const lilypadDistance = getAdaptiveDistance(RAINBOW_LILYPAD_RENDER_DISTANCE, 'rainbowLilypad');
-  const butterflyDistance = getAdaptiveDistance(RAINBOW_BUTTERFLY_RENDER_DISTANCE, 'rainbowButterfly');
-
   for (let i = 0; i < RAINBOW_TREE_SPOTS.length; i += 1) {
     const spot = RAINBOW_TREE_SPOTS[i];
-    if (!isRainbowDetailVisible(spot[1], spot[2], treeDistance)) {
+    if (!isRainbowDetailVisible(spot[1], spot[2], RAINBOW_TREE_RENDER_DISTANCE)) {
       continue;
     }
 
@@ -4081,21 +3940,19 @@ function renderRainbowLandScene() {
 
   for (let i = 0; i < RAINBOW_BUSH_SPOTS.length; i += 1) {
     const spot = RAINBOW_BUSH_SPOTS[i];
-    if (!shouldRenderAdaptiveDetail(i, 'rainbowBush') ||
-      !isRainbowDetailVisible(spot[0], spot[1], bushDistance)) {
+    if (!isRainbowDetailVisible(spot[0], spot[1], RAINBOW_BUSH_RENDER_DISTANCE)) {
       continue;
     }
 
     renderRainbowBush(spot[0], spot[1], spot[2], [0.39, 0.66, 0.27, 1.0], [0.56, 0.79, 0.38, 1.0]);
   }
 
-  renderResolvedRainbowFlowers(g_rainbowHandFlowerPatches, handFlowerDistance, 'rainbowHandFlower');
-  renderResolvedRainbowFlowers(g_rainbowResolvedFlowerPatches, flowerDistance, 'rainbowFlower');
+  renderResolvedRainbowFlowers(g_rainbowHandFlowerPatches, RAINBOW_HAND_FLOWER_RENDER_DISTANCE);
+  renderResolvedRainbowFlowers(g_rainbowResolvedFlowerPatches, RAINBOW_FLOWER_RENDER_DISTANCE);
 
   for (let i = 0; i < RAINBOW_GRASS_SPOTS.length; i += 1) {
     const spot = RAINBOW_GRASS_SPOTS[i];
-    if (!shouldRenderAdaptiveDetail(i, 'rainbowGrass') ||
-      !isRainbowDetailVisible(spot[0], spot[1], grassDistance)) {
+    if (!isRainbowDetailVisible(spot[0], spot[1], RAINBOW_GRASS_RENDER_DISTANCE)) {
       continue;
     }
 
@@ -4109,8 +3966,7 @@ function renderRainbowLandScene() {
 
   for (let i = 0; i < RAINBOW_LILYPAD_SPOTS.length; i += 1) {
     const spot = RAINBOW_LILYPAD_SPOTS[i];
-    if (!shouldRenderAdaptiveDetail(i, 'rainbowLilypad') ||
-      !isRainbowDetailVisible(spot[0], spot[1], lilypadDistance)) {
+    if (!isRainbowDetailVisible(spot[0], spot[1], RAINBOW_LILYPAD_RENDER_DISTANCE)) {
       continue;
     }
 
@@ -4119,8 +3975,7 @@ function renderRainbowLandScene() {
 
   for (let i = 0; i < RAINBOW_BUTTERFLY_SPOTS.length; i += 1) {
     const spot = RAINBOW_BUTTERFLY_SPOTS[i];
-    if (!shouldRenderAdaptiveDetail(i, 'rainbowButterfly') ||
-      !isRainbowDetailVisible(spot[0], spot[2], butterflyDistance)) {
+    if (!isRainbowDetailVisible(spot[0], spot[2], RAINBOW_BUTTERFLY_RENDER_DISTANCE)) {
       continue;
     }
 
