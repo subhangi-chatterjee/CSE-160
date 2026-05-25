@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Blocky Animal Lighting</title>
+    <style>
+      body {
+        font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      }
+
+      canvas {
+        border: 1px solid #94a3b8;
+      }
+
+      .control-row {
+        margin: 10px 0;
+      }
+
+      .compact-label {
+        display: inline-block;
+        min-width: 130px;
+      }
+    </style>
+  </head>
+
+  <body onload="main()">
+    <canvas id="webgl" width="700" height="520">
+      Please use a browser that supports canvas
+    </canvas>
+
+    <p id="numdot">ms: 0 fps: 0</p>
+    <p id="objStatus">OBJ: loading...</p>
+
+    <div class="control-row">
+      Animation:
+      <button type="button" id="animation1Button">Animation 1</button>
+      <button type="button" id="animation2Button">Animation 2</button>
+      <button type="button" id="animation3Button">Animation 3</button>
+      <button type="button" id="animation4Button">Animation 4</button>
+      <button type="button" id="animationOffButton">OFF</button>
+      <button type="button" id="resetPoseButton">Reset</button>
+    </div>
+
+    <div class="control-row">
+      Lighting:
+      <button type="button" id="lightingToggleButton">Lighting ON</button>
+      <button type="button" id="pointLightToggleButton">Point Light ON</button>
+      <button type="button" id="pointLightMotionButton">Point Motion ON</button>
+      <button type="button" id="spotLightToggleButton">Spot Light ON</button>
+      <button type="button" id="normalToggleButton">Show Normals OFF</button>
+    </div>
+
+    <div class="control-row">
+      <span class="compact-label">Camera Angle</span>
+      <input type="range" min="0" max="360" value="20" class="slider" id="angleSlide">
+    </div>
+
+    <div class="control-row">
+      <span class="compact-label">Point Light X</span>
+      <input type="range" min="-150" max="150" value="0" class="slider" id="lightXSlide">
+      <span class="compact-label">Point Light Y</span>
+      <input type="range" min="0" max="200" value="95" class="slider" id="lightYSlide">
+      <span class="compact-label">Point Light Z</span>
+      <input type="range" min="-150" max="150" value="0" class="slider" id="lightZSlide">
+    </div>
+
+    <div class="control-row">
+      <span class="compact-label">Light Color R</span>
+      <input type="range" min="0" max="100" value="100" class="slider" id="lightRSlide">
+      <span class="compact-label">Light Color G</span>
+      <input type="range" min="0" max="100" value="92" class="slider" id="lightGSlide">
+      <span class="compact-label">Light Color B</span>
+      <input type="range" min="0" max="100" value="82" class="slider" id="lightBSlide">
+    </div>
+
+    <div class="control-row">
+      <span class="compact-label">Front Upper Legs</span>
+      <input type="range" min="-45" max="45" value="18" class="slider" id="frontUpperSlide">
+    </div>
+
+    <div class="control-row">
+      <span class="compact-label">Front Lower Legs</span>
+      <input type="range" min="-45" max="45" value="8" class="slider" id="frontLowerSlide">
+    </div>
+
+    <div class="control-row">
+      <span class="compact-label">Back Upper Legs</span>
+      <input type="range" min="-45" max="45" value="-9" class="slider" id="backUpperSlide">
+    </div>
+
+    <div class="control-row">
+      <span class="compact-label">Back Lower Legs</span>
+      <input type="range" min="-45" max="45" value="-2" class="slider" id="backLowerSlide">
+    </div>
+
+    <div class="control-row">
+      <span class="compact-label">Head</span>
+      <input type="range" min="-140" max="-40" value="-90" class="slider" id="headSlide">
+    </div>
+
+    <div class="control-row">
+      <span class="compact-label">Neck</span>
+      <input type="range" min="0" max="100" value="80" class="slider" id="neckSlide">
+    </div>
+
+    <div class="control-row">
+      <span class="compact-label">Tail</span>
+      <input type="range" min="-45" max="45" value="20" class="slider" id="tailSlide">
+    </div>
+
+    <div class="control-row">
+      <span class="compact-label">Tail Mid</span>
+      <input type="range" min="-70" max="70" value="12" class="slider" id="tailTipSlide">
+    </div>
+
+    <div class="control-row">
+      <span class="compact-label">Tail End</span>
+      <input type="range" min="-80" max="80" value="8" class="slider" id="tailCurlSlide">
+    </div>
+
+    <p>Drag on the canvas to rotate. Shift-click for a special tail flick.</p>
+
+    <script src="lib/webgl-utils.js"></script>
+    <script src="lib/webgl-debug.js"></script>
+    <script src="lib/cuon-utils.js"></script>
+    <script src="lib/cuon-matrix.js"></script>
+
+    <script src="Triangle.js"></script>
+    <script src="Circle.js"></script>
+    <script src="Point.js"></script>
+    <script src="Cube.js"></script>
+    <script src="Cone.js"></script>
+    <script src="Prism.js"></script>
+    <script src="Sphere.js"></script>
+    <script src="OBJModel.js"></script>
+    <script src="BlockyAnimal.js"></script>
+  </body>
+</html>
