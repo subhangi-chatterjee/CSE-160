@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="768" viewBox="0 0 512 768">
+  <rect x="16" y="16" width="480" height="736" rx="32" fill="#fff9f0" stroke="#331f1f" stroke-width="12"/>
+  <text x="60" y="92" font-size="62" font-family="Georgia, serif" fill="#ba1b42">Q</text>
+  <text x="420" y="682" font-size="62" font-family="Georgia, serif" fill="#ba1b42">Q</text>
+  <g transform="translate(256 384)">
+    <path d="M0-190c54 25 94 81 94 145 0 94-76 170-170 170S-246 49-246-45c0-64 40-120 94-145 20 26 46 41 76 41s56-15 76-41z" fill="#d94f70"/>
+    <circle cx="0" cy="-24" r="82" fill="#ffe9ef" stroke="#7a2436" stroke-width="12"/>
+    <path d="M-54 42c18-44 53-66 54-66s36 22 54 66" fill="#7a2436"/>
+    <path d="M-56 -34c14-18 32-27 56-27s42 9 56 27" fill="none" stroke="#7a2436" stroke-width="10" stroke-linecap="round"/>
+    <path d="M-99 114c35-27 65-37 99-37s64 10 99 37" fill="none" stroke="#7a2436" stroke-width="14" stroke-linecap="round"/>
+  </g>
+  <g fill="#ba1b42">
+    <path d="M84 144c18-35 58-35 76 0 11 22 7 50-17 71l-21 20-21-20c-24-21-28-49-17-71z"/>
+    <path d="M428 624c18-35 58-35 76 0 11 22 7 50-17 71l-21 20-21-20c-24-21-28-49-17-71z" transform="translate(-116 -4)"/>
+  </g>
+</svg>

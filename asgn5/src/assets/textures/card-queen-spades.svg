@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="768" viewBox="0 0 512 768">
+  <rect x="14" y="14" width="484" height="740" rx="28" fill="#fffdf8" stroke="#1b1716" stroke-width="10"/>
+  <text x="52" y="92" font-size="70" font-family="Georgia, serif" fill="#111">Q</text>
+  <text x="442" y="684" font-size="70" font-family="Georgia, serif" fill="#111" transform="rotate(180 442 684)">Q</text>
+  <path d="M76 132c-15-22-7-53 23-53s38 31 23 53l-23 38z" fill="#111"/>
+  <path d="M436 638c-15-22-7-53 23-53s38 31 23 53l-23 38z" fill="#111" transform="rotate(180 458 638)"/>
+  <g transform="translate(256 408)">
+    <path d="M-100 140c4-91 35-170 110-210 45 1 92 25 126 65-23 28-38 53-44 87-33-24-68-32-102-28-44 5-73 30-90 86z" fill="#d93537"/>
+    <ellipse cx="-10" cy="74" rx="68" ry="112" fill="#f6d5cf" stroke="#8d2d3a" stroke-width="6"/>
+    <path d="M-70 -8c20-14 42-20 69-19 25 1 47 7 64 21" fill="none" stroke="#7f2436" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="-42" cy="14" r="7" fill="#341919"/>
+    <path d="M-42 60c15 20 41 29 73 26" fill="none" stroke="#8d2d3a" stroke-width="6" stroke-linecap="round"/>
+    <path d="M-70 -72l35 -33 24 29 28-35 37 42 29-20 20 58-173 0z" fill="#efb33d" stroke="#9e3d2f" stroke-width="6"/>
+    <circle cx="-39" cy="-92" r="9" fill="#db4636"/>
+    <circle cx="22" cy="-88" r="9" fill="#db4636"/>
+    <circle cx="76" cy="-64" r="9" fill="#db4636"/>
+    <path d="M82 16c18 9 35 22 50 41" fill="none" stroke="#efb33d" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="127" cy="56" r="11" fill="#c93456"/>
+    <path d="M-60 162c40-28 74-39 110-37" fill="none" stroke="#b62d42" stroke-width="12" stroke-linecap="round"/>
+    <path d="M76 166c11-36 26-61 48-84" fill="none" stroke="#e19d2d" stroke-width="8" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="768" viewBox="0 0 512 768">
+  <rect x="14" y="14" width="484" height="740" rx="28" fill="#fffdf8" stroke="#1b1716" stroke-width="10"/>
+  <text x="52" y="92" font-size="70" font-family="Georgia, serif" fill="#111">3</text>
+  <text x="442" y="684" font-size="70" font-family="Georgia, serif" fill="#111" transform="rotate(180 442 684)">3</text>
+  <path d="M76 132c-15-22-7-53 23-53s38 31 23 53l-23 38z" fill="#111"/>
+  <path d="M436 638c-15-22-7-53 23-53s38 31 23 53l-23 38z" fill="#111" transform="rotate(180 458 638)"/>
+  <g transform="translate(256 412)">
+    <rect x="-122" y="-18" width="64" height="200" rx="12" fill="#f7f4ee" stroke="#cfc9bc" stroke-width="4" transform="rotate(-17)"/>
+    <rect x="-74" y="-110" width="64" height="228" rx="12" fill="#f7f4ee" stroke="#cfc9bc" stroke-width="4" transform="rotate(12)"/>
+    <rect x="-26" y="-146" width="64" height="228" rx="12" fill="#f7f4ee" stroke="#cfc9bc" stroke-width="4" transform="rotate(-8)"/>
+    <rect x="38" y="-118" width="64" height="208" rx="12" fill="#f7f4ee" stroke="#cfc9bc" stroke-width="4" transform="rotate(9)"/>
+    <circle cx="34" cy="-10" r="86" fill="#fff"/>
+    <path d="M-24 118c8-70 52-128 58-128s51 59 58 128" fill="#d6d9e6"/>
+    <path d="M0 -6c18-29 41-42 71-41 23 1 46 12 67 32" fill="none" stroke="#c78c33" stroke-width="12" stroke-linecap="round"/>
+    <path d="M-16 8c18-29 39-45 64-53" fill="none" stroke="#d5a245" stroke-width="12" stroke-linecap="round"/>
+    <circle cx="18" cy="-3" r="10" fill="#caa144"/>
+    <path d="M-20 6c-18 15-33 35-48 68" fill="none" stroke="#d0d3df" stroke-width="11" stroke-linecap="round"/>
+    <path d="M40 7c13 11 31 39 39 70" fill="none" stroke="#d0d3df" stroke-width="11" stroke-linecap="round"/>
+    <path d="M-11 55c-7 4-17 18-22 31" fill="none" stroke="#d0d3df" stroke-width="8" stroke-linecap="round"/>
+    <path d="M54 56c11 5 21 18 24 29" fill="none" stroke="#d0d3df" stroke-width="8" stroke-linecap="round"/>
+    <path d="M-6 162c-47 0-80 11-109 39" fill="none" stroke="#7e6437" stroke-width="6" stroke-linecap="round"/>
+    <ellipse cx="-78" cy="176" rx="34" ry="16" fill="#a48049"/>
+    <ellipse cx="-116" cy="190" rx="16" ry="8" fill="#cfb16d"/>
+  </g>
+</svg>

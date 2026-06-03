@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="768" viewBox="0 0 512 768">
+  <rect x="14" y="14" width="484" height="740" rx="28" fill="#fffdf8" stroke="#8f1d2b" stroke-width="10"/>
+  <text x="52" y="92" font-size="70" font-family="Georgia, serif" fill="#bf2036">Q</text>
+  <text x="442" y="684" font-size="70" font-family="Georgia, serif" fill="#bf2036" transform="rotate(180 442 684)">Q</text>
+  <path d="M75 142c0-28 31-46 49-24 18-22 49-4 49 24 0 32-37 58-49 80-13-22-49-48-49-80z" fill="#bf2036"/>
+  <path d="M427 626c0-28 31-46 49-24 18-22 49-4 49 24 0 32-37 58-49 80-13-22-49-48-49-80z" fill="#bf2036" transform="rotate(180 452 666)"/>
+  <g transform="translate(256 412)">
+    <path d="M-74 152c14-80 57-162 112-202 44 14 92 61 116 113-12 26-47 49-80 61-14-37-42-72-74-84-19 24-32 57-35 112z" fill="#d94a45"/>
+    <path d="M-17 -86c48 6 86 30 110 69-38 22-77 33-118 33-9-39-7-70 8-102z" fill="#f4be2c" stroke="#b62b44" stroke-width="6"/>
+    <ellipse cx="-2" cy="72" rx="66" ry="112" fill="#efc0b5" stroke="#98263b" stroke-width="6"/>
+    <path d="M-45 2c17-13 36-18 59-16 20 1 37 7 51 19" fill="none" stroke="#7b1d34" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="-16" cy="23" r="7" fill="#341919"/>
+    <path d="M-18 68c15 16 37 20 63 16" fill="none" stroke="#98263b" stroke-width="6" stroke-linecap="round"/>
+    <path d="M76 12l66 0-17 24 17 24-66 0z" fill="#2a2835"/>
+    <path d="M78 14l56 0-16 20 16 22-56 0z" fill="#f0c744"/>
+    <path d="M-106 144c31-14 62-18 94-15" fill="none" stroke="#d44a34" stroke-width="12" stroke-linecap="round"/>
+  </g>
+</svg>

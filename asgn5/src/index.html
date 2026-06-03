@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alice in Wonderland Forest</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: "Trebuchet MS", "Gill Sans", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: #05070b;
+        color: #f2f6ff;
+      }
+
+      #app {
+        width: 100vw;
+        height: 100vh;
+      }
+
+      #hud,
+      #wow-note,
+      #instructions {
+        position: fixed;
+        z-index: 10;
+        background: rgba(5, 8, 15, 0.62);
+        border: 1px solid rgba(198, 228, 255, 0.18);
+        backdrop-filter: blur(12px);
+        border-radius: 14px;
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.28);
+      }
+
+      #hud {
+        top: 18px;
+        left: 18px;
+        padding: 12px 14px;
+        min-width: 250px;
+      }
+
+      #hud-controls {
+        margin-top: 12px;
+      }
+
+      #hud h1 {
+        margin: 0 0 6px;
+        font-size: 18px;
+        letter-spacing: 0.03em;
+      }
+
+      #hud p,
+      #wow-note p,
+      #instructions p {
+        margin: 0;
+        line-height: 1.45;
+        font-size: 13px;
+      }
+
+      #wow-note {
+        right: 18px;
+        bottom: 18px;
+        max-width: 340px;
+        padding: 12px 14px;
+      }
+
+      #instructions {
+        inset: 0;
+        margin: auto;
+        width: min(520px, calc(100vw - 32px));
+        height: fit-content;
+        padding: 22px 24px;
+        text-align: center;
+      }
+
+      #instructions h2 {
+        margin: 0 0 10px;
+        font-size: 24px;
+      }
+
+      #instructions button {
+        margin-top: 16px;
+        padding: 10px 18px;
+        border-radius: 999px;
+        border: 0;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 700;
+        color: #05101a;
+        background: linear-gradient(135deg, #e9f7ff, #8dd9ff);
+      }
+
+      #instructions.hidden {
+        display: none;
+      }
+
+      .hud-button {
+        padding: 9px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(198, 228, 255, 0.28);
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 700;
+        color: #f2f6ff;
+        background: linear-gradient(135deg, rgba(122, 177, 221, 0.34), rgba(65, 99, 139, 0.54));
+      }
+
+      .hud-button:hover {
+        background: linear-gradient(135deg, rgba(149, 205, 246, 0.42), rgba(82, 123, 171, 0.64));
+      }
+
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.164.1/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.164.1/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <section id="hud">
+      <h1>Alice in Wonderland Forest</h1>
+      <p>Controls: hold left click and drag to look around, then use <strong>W A S D</strong> to walk.</p>
+      <div id="hud-controls">
+        <button id="timeToggleButton" class="hud-button" type="button">Switch to Day</button>
+        <button id="portalButton" class="hud-button" type="button">Use Portal</button>
+      </div>
+    </section>
+    <section id="wow-note">
+      <p>
+        Wow feature: Find the Mad Hatter's Tea Party. Walk Along the Trail to the portal and press E to enter the Queen of Hearts Garden. Take a Look at the Portal from the side of the Queen's Garden, it's a mirror!
+      </p>
+    </section>
+    <section id="instructions">
+      <h2>Enter the Rabbit Trail</h2>
+      <p>Click the button below, then hold left click and drag to look around while using <strong>W A S D</strong> to explore the forest.</p>
+      <button id="startButton" type="button">Start Exploring</button>
+    </section>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

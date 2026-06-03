@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="768" viewBox="0 0 512 768">
+  <rect x="14" y="14" width="484" height="740" rx="28" fill="#fffdf8" stroke="#1b1716" stroke-width="10"/>
+  <text x="42" y="90" font-size="64" font-family="Georgia, serif" fill="#111">10</text>
+  <text x="452" y="680" font-size="64" font-family="Georgia, serif" fill="#111" transform="rotate(180 452 680)">10</text>
+  <path d="M72 136c-15-22-7-53 23-53s38 31 23 53l-23 38z" fill="#111"/>
+  <path d="M432 632c-15-22-7-53 23-53s38 31 23 53l-23 38z" fill="#111" transform="rotate(180 454 632)"/>
+  <g transform="translate(256 386)">
+    <path d="M-116 42c0-95 77-172 171-172 53 0 89 14 117 44-13 7-31 16-49 35-45-28-118-11-162 24-37 29-54 54-77 101z" fill="#f8f4eb" stroke="#4f3f27" stroke-width="5"/>
+    <ellipse cx="-44" cy="40" rx="88" ry="108" fill="#f3d8bb" stroke="#6c512f" stroke-width="5"/>
+    <path d="M-82 10c17-7 36-8 55 3" fill="none" stroke="#45352e" stroke-width="6" stroke-linecap="round"/>
+    <path d="M-54 44c15 17 35 23 58 19" fill="none" stroke="#7d5336" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="-69" cy="-7" r="7" fill="#222"/>
+    <path d="M-2 -118c77-18 135-8 153 33-19 19-37 50-42 84-48-11-89-7-143 12-16-45-10-85 32-129z" fill="#e9d6af" stroke="#6c512f" stroke-width="5"/>
+    <rect x="16" y="-145" width="128" height="92" rx="8" fill="#f8f3e4" stroke="#6c512f" stroke-width="5"/>
+    <text x="32" y="-108" font-size="22" font-family="Georgia, serif" fill="#4f3f27">In this style</text>
+    <text x="32" y="-82" font-size="22" font-family="Georgia, serif" fill="#4f3f27">10/6</text>
+    <path d="M-2 110c53-13 85-40 108-91" fill="none" stroke="#d49a2b" stroke-width="18" stroke-linecap="round"/>
+    <circle cx="42" cy="106" r="20" fill="#e6ba3b"/>
+    <circle cx="66" cy="102" r="9" fill="#cb5d49"/>
+    <circle cx="20" cy="115" r="9" fill="#cb5d49"/>
+  </g>
+</svg>

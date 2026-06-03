@@ -1,0 +1,8 @@
+newmtl RabbitCardMaterial
+Ka 0.2000 0.1200 0.1200
+Kd 1.0000 1.0000 1.0000
+Ks 0.1000 0.1000 0.1000
+Ns 25.0000
+d 1.0
+illum 2
+map_Kd ../textures/cards/rabbit-hearts.png

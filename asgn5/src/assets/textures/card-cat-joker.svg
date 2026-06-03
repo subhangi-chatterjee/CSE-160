@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="768" viewBox="0 0 512 768">
+  <rect x="14" y="14" width="484" height="740" rx="28" fill="#fffdf8" stroke="#8f1d2b" stroke-width="10"/>
+  <text x="52" y="122" font-size="50" font-family="Georgia, serif" fill="#bf2036">JOKER</text>
+  <text x="460" y="640" font-size="50" font-family="Georgia, serif" fill="#bf2036" transform="rotate(180 460 640)">JOKER</text>
+  <g transform="translate(256 372)">
+    <ellipse cx="0" cy="12" rx="124" ry="102" fill="#8e683e" stroke="#5b4023" stroke-width="8"/>
+    <ellipse cx="-84" cy="-74" rx="34" ry="56" fill="#9b7448" stroke="#5b4023" stroke-width="7" transform="rotate(-22)"/>
+    <ellipse cx="84" cy="-74" rx="34" ry="56" fill="#9b7448" stroke="#5b4023" stroke-width="7" transform="rotate(22)"/>
+    <ellipse cx="-41" cy="-6" rx="32" ry="36" fill="#d4c685"/>
+    <ellipse cx="41" cy="-6" rx="32" ry="36" fill="#d4c685"/>
+    <circle cx="-41" cy="-4" r="17" fill="#a0bd84"/>
+    <circle cx="41" cy="-4" r="17" fill="#a0bd84"/>
+    <circle cx="-39" cy="-4" r="9" fill="#151515"/>
+    <circle cx="43" cy="-4" r="9" fill="#151515"/>
+    <circle cx="-44" cy="-8" r="3" fill="#fff"/>
+    <circle cx="39" cy="-8" r="3" fill="#fff"/>
+    <path d="M-18 36c15 12 40 16 74 15-12 31-40 46-81 44-35-2-58-16-67-43 39 4 64 0 74-16z" fill="#f5f2ea" stroke="#493421" stroke-width="6"/>
+    <path d="M-64 48c15 17 39 24 66 24 26 0 51-7 68-24" fill="none" stroke="#4e3b25" stroke-width="5" stroke-linecap="round"/>
+    <path d="M-17 28l17 -18 16 18" fill="#d8bd96" stroke="#5b4023" stroke-width="6" stroke-linejoin="round"/>
+  </g>
+</svg>

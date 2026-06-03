@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="768" viewBox="0 0 512 768">
+  <rect x="14" y="14" width="484" height="740" rx="28" fill="#fffdf8" stroke="#8f1d2b" stroke-width="10"/>
+  <text x="52" y="92" font-size="70" font-family="Georgia, serif" fill="#bf2036">5</text>
+  <text x="442" y="684" font-size="70" font-family="Georgia, serif" fill="#bf2036" transform="rotate(180 442 684)">5</text>
+  <path d="M75 142c0-28 31-46 49-24 18-22 49-4 49 24 0 32-37 58-49 80-13-22-49-48-49-80z" fill="#bf2036"/>
+  <path d="M427 626c0-28 31-46 49-24 18-22 49-4 49 24 0 32-37 58-49 80-13-22-49-48-49-80z" fill="#bf2036" transform="rotate(180 452 666)"/>
+  <g transform="translate(256 420)">
+    <ellipse cx="18" cy="-24" rx="24" ry="82" fill="#fff" stroke="#c8bfae" stroke-width="5" transform="rotate(18)"/>
+    <ellipse cx="58" cy="-14" rx="24" ry="88" fill="#fff" stroke="#c8bfae" stroke-width="5" transform="rotate(31)"/>
+    <ellipse cx="0" cy="116" rx="62" ry="122" fill="#fbfbfa" stroke="#c9c0af" stroke-width="6"/>
+    <ellipse cx="0" cy="34" rx="54" ry="72" fill="#fbfbfa" stroke="#c9c0af" stroke-width="6"/>
+    <circle cx="-17" cy="25" r="8" fill="#5c4640"/>
+    <circle cx="19" cy="34" r="4" fill="#d97586"/>
+    <path d="M-6 42c12 10 24 10 37 0" fill="none" stroke="#8a5d54" stroke-width="5" stroke-linecap="round"/>
+    <path d="M-60 28c-44 13-79 35-110 70" fill="none" stroke="#dfb242" stroke-width="14" stroke-linecap="round"/>
+    <circle cx="-119" cy="83" r="10" fill="#d62f45"/>
+    <path d="M-49 -2h128c15 0 27 12 27 27v93c0 15-12 27-27 27H-49c-15 0-27-12-27-27V25c0-15 12-27 27-27z" fill="#f0bf2c"/>
+    <path d="M-56 36c23-18 48-20 75-5 17 10 35 13 58 6" fill="none" stroke="#d73745" stroke-width="8" stroke-linecap="round"/>
+    <path d="M-36 74c15-12 34-13 54-3 14 7 27 8 43 3" fill="none" stroke="#d73745" stroke-width="8" stroke-linecap="round"/>
+    <path d="M-18 150c0 34-9 63-26 87" fill="none" stroke="#f0f0ef" stroke-width="18" stroke-linecap="round"/>
+    <path d="M22 150c0 34 8 63 25 87" fill="none" stroke="#f0f0ef" stroke-width="18" stroke-linecap="round"/>
+  </g>
+</svg>
